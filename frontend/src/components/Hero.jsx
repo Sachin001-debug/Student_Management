@@ -1,7 +1,7 @@
 //hero section for the app is here. From btn to title that features the app des
 const Hero = () => {
   return (
-    <section className="min-h-[80vh] flex items-center justify-center bg-gray-200 text-black px-6">
+    <section className="min-h-[80vh] flex items-center justify-center bg-gray-300 text-black px-6">
       
       <div className="max-w-4xl text-center flex flex-col gap-6">
         
