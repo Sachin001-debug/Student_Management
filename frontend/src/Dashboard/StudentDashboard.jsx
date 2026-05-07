@@ -8,6 +8,7 @@ import {
   LogOut,
   Menu,
   X,
+  Sheet,
 } from "lucide-react";
 
 import StudentDashboardContent from '../components/Student/StudentDashboardContent';
@@ -111,6 +112,18 @@ const StudentDashboard = () => {
           >
             <User size={22} />
             Profile
+          </li>
+
+            <li
+            onClick={() => navigateTo("notice")}
+            className={`flex items-center gap-3 text-lg cursor-pointer py-3 px-4 rounded-lg transition-all ${
+              activePage === "notice"
+                ? "bg-gray-800 text-green-400"
+                : "hover:text-green-400 hover:bg-gray-800"
+            }`}
+          >
+            <Sheet size={22} />
+            Notices
           </li>
         </ul>
 
