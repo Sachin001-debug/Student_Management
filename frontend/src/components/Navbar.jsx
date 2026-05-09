@@ -23,36 +23,41 @@ const Navbar = () => {
   const [currentState, setCurrentState] = useState("Login");
 
   // LOGIN HANDLER
-  const loginHandler = async () => {
-    try {
-      if (!email || !password) {
-        toast.error("Enter all fields");
-        return;
-      }
-      const res = await axios.post(`${API}/user/login`, {
-        email,
-        password,
-      });
-
-      if (res.data.success) {
-        localStorage.setItem("role", res.data.user.role);
-         localStorage.setItem("token", res.data.token);
-        toast.success("Login successful");
-        setEmail("");
-        setPassword("");
-        setIsFormOpen(false);
-
-        if (res.data.user.role === "teacher") {
-          navigate("/teacher/dashboard");
-        } else {
-          navigate("/student/dashboard");
-        }
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Login failed");
-      console.log("error in loginHandler", err);
+  // Navbar.jsx - Update the loginHandler
+const loginHandler = async () => {
+  try {
+    if (!email || !password) {
+      toast.error("Enter all fields");
+      return;
     }
-  };
+    const res = await axios.post(`${API}/user/login`, {
+      email,
+      password,
+    });
+
+    if (res.data.success) {
+      localStorage.setItem("role", res.data.user.role);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("userId", res.data.user.id);
+      toast.success("Login successful");
+      setEmail("");
+      setPassword("");
+      setIsFormOpen(false);
+
+      // Handle admin role
+      if (res.data.user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (res.data.user.role === "teacher") {
+        navigate("/teacher/dashboard");
+      } else {
+        navigate("/student/dashboard");
+      }
+    }
+  } catch (err) {
+    toast.error(err.response?.data?.message || "Login failed");
+    console.log("error in loginHandler", err);
+  }
+};
 
   // REGISTER HANDLER
   const registerHandler = async () => {

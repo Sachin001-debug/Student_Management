@@ -8,7 +8,7 @@ export const createUserTable = async () => {
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    role TEXT NOT NULL CHECK(role IN ('student', 'teacher')) DEFAULT 'student',
+    role TEXT NOT NULL CHECK(role IN ('student', 'teacher', 'admin')) DEFAULT 'student',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 `;

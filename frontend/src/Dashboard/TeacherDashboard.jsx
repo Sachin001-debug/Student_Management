@@ -76,7 +76,7 @@ const TeacherDashboard = () => {
             }`}
           >
             <BookOpen size={22} />
-            Courses
+            Subject
           </li>
 
           <li
