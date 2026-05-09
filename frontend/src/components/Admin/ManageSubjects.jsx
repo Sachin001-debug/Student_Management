@@ -32,7 +32,7 @@ const ManageSubjects = () => {
     fetchClasses();
   }, []);
 
-  // Fetch subjects when class is selected
+  //useEffect to Fetch subjects when class is selected
   useEffect(() => {
     if (selectedClass) {
       fetchSubjectsByClass();
@@ -41,6 +41,7 @@ const ManageSubjects = () => {
     }
   }, [selectedClass]);
 
+  //fetch sub by class from subjectController
   const fetchSubjectsByClass = async () => {
     setLoading(true);
     try {
@@ -63,6 +64,7 @@ const ManageSubjects = () => {
     }
   };
 
+  //handles ddeletes of the sub from the list 
   const handleDeleteSubject = async (subjectId, subjectName) => {
     if (!window.confirm(`Delete ${subjectName}?`)) return;
 
@@ -73,7 +75,7 @@ const ManageSubjects = () => {
 
       if (response.data.success) {
         toast.success("Subject deleted successfully");
-        fetchSubjectsByClass(); // Refresh list
+        fetchSubjectsByClass(); 
       }
     } catch (error) {
       console.error("Delete error:", error);

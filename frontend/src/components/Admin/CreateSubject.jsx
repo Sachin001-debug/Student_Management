@@ -37,7 +37,7 @@ const CreateSubject = () => {
           },
         }
       );
-
+  //for sussfull execution
       if (data.success) {
         toast.success(data.message || "Subject created successfully!");
         
@@ -54,8 +54,6 @@ const CreateSubject = () => {
       
       if (err.response?.status === 401) {
         toast.error("Please login again");
-        // Redirect to login if needed
-        // navigate('/login');
       } else if (err.response?.data?.message) {
         toast.error(err.response.data.message);
       } else {
