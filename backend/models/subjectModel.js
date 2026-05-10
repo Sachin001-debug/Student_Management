@@ -1,4 +1,6 @@
 import pool from '../config/db.js'
+
+//this creates sub table with class so that we can fetch/get sub class wise
 export const createSubjectTable = async () => {
   try {
     const query = `
@@ -19,7 +21,8 @@ export const createSubjectTable = async () => {
   }
 };
 
-// Updated insertSubject with class parameter
+// Updated insertSubject with class parameter 
+//camel case from the frontend
 export const insertSubject = async (
   subjectName,
   subjectCode,

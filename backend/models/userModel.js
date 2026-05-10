@@ -9,6 +9,7 @@ export const createUserTable = async () => {
     email VARCHAR(100) UNIQUE NOT NULL,
     password TEXT NOT NULL,
     role TEXT NOT NULL CHECK(role IN ('student', 'teacher', 'admin')) DEFAULT 'student',
+    class_name VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 `;
@@ -21,14 +22,14 @@ export const createUserTable = async () => {
 };
 
 //fun for register user
-const insertUser = async (name, email, password, role) => {
+const insertUser = async (name, email, password, role, class_name) => {
   const query = `
-     INSERT INTO users (name, email, password, role)
-     VALUES ($1, $2, $3, $4)  
-    RETURNING id, name, email, role, created_at;
+     INSERT INTO users (name, email, password, role, class_name)
+     VALUES ($1, $2, $3, $4, $5)  
+    RETURNING id, name, email, role, class_name, created_at;
     `;
   try {
-    const result = await pool.query(query, [name, email, password, role]);
+    const result = await pool.query(query, [name, email, password, role, class_name]);
     return result.rows[0];
   } catch {
     console.log("user cant be created!!");

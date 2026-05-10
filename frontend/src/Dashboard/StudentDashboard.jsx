@@ -14,6 +14,7 @@ import {
 import StudentDashboardContent from '../components/Student/StudentDashboardContent';
 import Profile from '../shared/Profile';   
 import { useNavigate } from 'react-router-dom';
+import ViewNotice from '../shared/ViewNotice';
 
 const StudentDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -115,9 +116,9 @@ const StudentDashboard = () => {
           </li>
 
             <li
-            onClick={() => navigateTo("notice")}
+            onClick={() => navigateTo("notices")}
             className={`flex items-center gap-3 text-lg cursor-pointer py-3 px-4 rounded-lg transition-all ${
-              activePage === "notice"
+              activePage === "notices"
                 ? "bg-gray-800 text-green-400"
                 : "hover:text-green-400 hover:bg-gray-800"
             }`}
@@ -158,6 +159,7 @@ const StudentDashboard = () => {
         <div className="flex-1 overflow-auto p-6">
           {activePage === "dashboard" && <StudentDashboardContent />}
           {activePage === "profile" && <Profile />}
+            {activePage === "notices" && <ViewNotice />}
           
         {/*after making components */}
           {activePage === "courses" && (

@@ -62,7 +62,7 @@ const loginUser = async (req, res) => {
 //register
 const registerUser = async (req, res) => {
   try {
-    const { name, password, email, role } = req.body;
+    const { name, password, email, role, class_name } = req.body;
 
     if (!email || !password || !name) {
       return res.json({ success: false, message: "Fill all fields" });
@@ -83,7 +83,8 @@ const registerUser = async (req, res) => {
       name,
       email,
       hashedPassword,
-      role || "student"
+      role || "student",
+       role === 'student' ? class_name:null
     );
 
     if (result) {

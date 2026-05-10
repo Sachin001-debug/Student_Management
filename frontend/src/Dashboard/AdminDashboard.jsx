@@ -10,6 +10,7 @@ import {
   WindIcon,
   School2,
   GraduationCap,
+  Bell,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -18,6 +19,7 @@ import Profile from "../shared/Profile";
 import ManageSubjects from "../components/Admin/ManageSubjects";
 import AssignTeacher from "../components/Admin/AssignTeacher";
 import AssignStudent from "../components/Admin/AssignStudent";
+import Notice from "../components/Admin/Notice";
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -63,6 +65,7 @@ const AdminDashboard = () => {
               { id: "assignClass", label: "Assign Teachers", icon: WindIcon },
               { id: "assignStudent", label: "Assign Students", icon: GraduationCap },
               { id: "profile", label: "Profile", icon: User },
+              { id: "notice", label: "Notice", icon: Bell},
             ].map(({ id, label, icon: Icon }) => (
               <li
                 key={id}
@@ -131,6 +134,7 @@ const AdminDashboard = () => {
           {activePage === "assignClass" && <AssignTeacher />}
           {activePage === "assignStudent" && <AssignStudent />}
           {activePage === "profile" && <Profile />}
+          {activePage === "notice" && <Notice />}
         </main>
       </div>
 

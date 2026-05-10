@@ -64,7 +64,7 @@ const createSubject = async (req, res) => {
       });
     }
     
-    const teacherId = teacher_id || req.user.id; // Use logged-in teacher ID if not provided
+    const teacherId = teacher_id || req.user.id; 
     
     const newSubject = await insertSubject(
       subject_name,

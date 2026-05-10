@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 
 import TeacherDashboardContent from '../components/Teacher/TeacherDashboardContent';
 import Profile from '../shared/Profile';
+import ViewNotice from '../shared/ViewNotice';
 
 const TeacherDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -181,6 +182,7 @@ const TeacherDashboard = () => {
         <div className="flex-1 overflow-auto p-6">
           {activePage === "dashboard" && <TeacherDashboardContent />}
           {activePage === "profile" && <Profile />}
+           {activePage === "notices" && <ViewNotice />}
 
           {/* Placeholder for other pages */}
           {activePage === "courses" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Courses Management</h2></div>}
@@ -189,7 +191,7 @@ const TeacherDashboard = () => {
           {activePage === "attendance" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Attendance Management</h2></div>}
           {activePage === "students" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Students List</h2></div>}
           {activePage === "results" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Results &amp; Grading</h2></div>}
-          {activePage === "notices" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Notices &amp; Announcements</h2></div>}
+        
         </div>
       </div>
 
