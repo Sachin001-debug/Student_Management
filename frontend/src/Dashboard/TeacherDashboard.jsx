@@ -30,8 +30,8 @@ const TeacherDashboard = () => {
   const closeSidebar = () => setIsSidebarOpen(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate('/login');
+    localStorage.clear();
+    navigate('/');
   };
 
   // Navigation handler

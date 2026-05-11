@@ -98,3 +98,53 @@ export const deleteSubject = async (subjectId) => {
     throw err;
   }
 };
+
+//edit subject from manage subject
+//only for admin. so admin can edit subject name, code 
+export const editSubject = async (
+  subjectId,
+  subjectName,
+  subjectCode,
+  class_name
+) => {
+  try {
+    const query = `
+      UPDATE subjects
+      SET 
+        subject_name = $1,
+        subject_code = $2,
+        class = $3
+      WHERE id = $4
+      RETURNING *;
+    `;
+
+    const result = await pool.query(query, [
+      subjectName,
+      subjectCode,
+      class_name,
+      subjectId,
+    ]);
+
+    return result.rows[0];
+  } catch (err) {
+    console.log("Error editing subject", err);
+    throw err;
+  }
+};
+
+//for teacher since we have multiple classes for teacher
+export const getSubjectsByMultipleClasses = async (classes) => {
+  try {
+    const query = `
+      SELECT * FROM subjects
+      WHERE class = ANY($1)
+    `;
+
+    const result = await pool.query(query, [classes]);
+    return result.rows;
+
+  } catch (err) {
+    console.log("Error fetching subjects", err);
+    throw err;
+  }
+};

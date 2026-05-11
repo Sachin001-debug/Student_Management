@@ -31,8 +31,8 @@ const StudentDashboard = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate('/login')
+    localStorage.clear();
+    navigate('/')
   };
 
   return (

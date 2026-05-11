@@ -1,10 +1,5 @@
 
-import { 
-  getSubjectsByClass, 
-  getAllClasses,
-  deleteSubject,
-  insertSubject 
-} from "../models/subjectModel.js";
+import {  getSubjectsByClass, getAllClasses,deleteSubject,insertSubject,editSubject, getSubjectsByMultipleClasses } from "../models/subjectModel.js";
 
 // Get subjects by class
 const getSubjectsByClassController = async (req, res) => {
@@ -114,9 +109,88 @@ const deleteSubjectController = async (req, res) => {
   }
 };
 
+const editSubjectController = async (req, res) => {
+  try {
+    const {
+      subjectId,
+      subject_name,
+      subject_code,
+      class: className,
+    } = req.body;
+
+    if (!subject_name || !subject_code || !className) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    const updatedSubject = await editSubject(
+      subjectId,
+      subject_name,
+      subject_code,
+      className
+    );
+
+    res.json({
+      success: true,
+      message: "Updated Successfully!",
+      subject: updatedSubject,
+    });
+  } catch (err) {
+    console.error("Error editing subject:", err);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to edit subject!",
+    });
+  }
+};
+
+const getSubjectsForTeacherController = async (req, res) => {
+  try {
+    const teacherId = req.user.id;
+    
+    if(!teacherId){
+        return res.status(400).json({
+        success: false,
+        message: "Not authorized",
+      });
+    }
+    // get teacher classes
+    const teacher = await getTeacherById(teacherId);
+
+
+    const classes = teacher.assigned_class || [];
+
+    if (classes.length === 0) {
+      return res.json({
+        success: true,
+        subjects: [],
+      });
+    }
+
+    // get subjects for all classes
+    const subjects = await getSubjectsByMultipleClasses(classes);
+
+    res.json({
+      success: true,
+      subjects,
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch teacher subjects",
+    });
+  }
+};
 export {
   getSubjectsByClassController,
   getAllClassesController,
   createSubject,
-  deleteSubjectController
+  deleteSubjectController,
+  editSubjectController,
+  getSubjectsForTeacherController
 };

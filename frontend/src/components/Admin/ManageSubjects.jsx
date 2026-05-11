@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
-import { BookOpen, Trash2, Filter } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
+import { BookOpen, Trash2, Filter, Edit2 } from "lucide-react";
 
 const ManageSubjects = () => {
   const [classes, setClasses] = useState([]);
   const [selectedClass, setSelectedClass] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  //for form popup
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [editingSubject, setEditingSubject] = useState(null);
 
   const API = import.meta.env.VITE_API;
   const token = localStorage.getItem("token");
@@ -49,7 +53,7 @@ const ManageSubjects = () => {
         `${API}/subject/class/${selectedClass}`,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       if (response.data.success) {
@@ -64,7 +68,7 @@ const ManageSubjects = () => {
     }
   };
 
-  //handles ddeletes of the sub from the list 
+  //handles ddeletes of the sub from the list
   const handleDeleteSubject = async (subjectId, subjectName) => {
     if (!window.confirm(`Delete ${subjectName}?`)) return;
 
@@ -75,7 +79,7 @@ const ManageSubjects = () => {
 
       if (response.data.success) {
         toast.success("Subject deleted successfully");
-        fetchSubjectsByClass(); 
+        fetchSubjectsByClass();
       }
     } catch (error) {
       console.error("Delete error:", error);
@@ -83,11 +87,56 @@ const ManageSubjects = () => {
     }
   };
 
+  //handles edit of the sub can change name and code only
+  const handleEditSubject = async (
+    subjectId,
+    subject_name,
+    subject_code,
+    className,
+  ) => {
+    try {
+      const response = await axios.put(
+        `${API}/subject/edit-subject`,
+        {
+          subjectId,
+          subject_name,
+          subject_code,
+          class: className,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response.data.success) {
+        toast.success("Subject Edited successfully");
+        fetchSubjectsByClass();
+        setIsEditFormOpen(false);
+      }
+    } catch (err) {
+      console.error("Edit error:", err);
+      toast.error("Failed to edit subject");
+    }
+  };
+
   // Fallback classes if none in DB
-  const availableClasses = classes.length > 0 ? classes : [
-    "Class 1", "Class 2", "Class 3", "Class 4", "Class 5",
-    "Class 6", "Class 7", "Class 8", "Class 9", "Class 10"
-  ];
+  const availableClasses =
+    classes.length > 0
+      ? classes
+      : [
+          "Class 1",
+          "Class 2",
+          "Class 3",
+          "Class 4",
+          "Class 5",
+          "Class 6",
+          "Class 7",
+          "Class 8",
+          "Class 9",
+          "Class 10",
+        ];
 
   return (
     <div className="space-y-6">
@@ -135,7 +184,9 @@ const ManageSubjects = () => {
           </div>
 
           {loading ? (
-            <div className="p-12 text-center text-gray-500">Loading subjects...</div>
+            <div className="p-12 text-center text-gray-500">
+              Loading subjects...
+            </div>
           ) : subjects.length === 0 ? (
             <div className="p-12 text-center text-gray-500">
               No subjects found for <strong>{selectedClass}</strong>
@@ -145,49 +196,138 @@ const ManageSubjects = () => {
               <table className="w-full min-w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Subject</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Teacher</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
-                    <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">Action</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Subject
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Code
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Teacher
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Created
+                    </th>
+                    <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {subjects.map((subject) => (
-                    <tr key={subject.id} className="hover:bg-gray-50 transition">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <BookOpen size={20} className="text-[#8E2C4A]" />
-                          <span className="font-medium text-gray-900">
-                            {subject.subject_name}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-gray-600 font-mono">
-                        {subject.subject_code}
-                      </td>
-                      <td className="px-6 py-4 text-gray-600">
-                        {subject.teacher_name || "Not Assigned"}
-                      </td>
-                      <td className="px-6 py-4 text-gray-500 text-sm">
-                        {new Date(subject.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <button
-                          onClick={() => handleDeleteSubject(subject.id, subject.subject_name)}
-                          className="text-red-600 hover:text-red-800 transition p-2 hover:bg-red-50 rounded-lg"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </td>
-                    </tr>
+                    <>
+                      <tr
+                        key={subject.id}
+                        className="hover:bg-gray-50 transition"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <BookOpen size={20} className="text-[#8E2C4A]" />
+                            <span className="font-medium text-gray-900">
+                              {subject.subject_name}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-gray-600 font-mono">
+                          {subject.subject_code}
+                        </td>
+                        <td className="px-6 py-4 text-gray-600">
+                          {subject.teacher_name || "Not Assigned"}
+                        </td>
+                        <td className="px-6 py-4 text-gray-500 text-sm">
+                          {new Date(subject.created_at).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          {/*EDIT ICON */}
+                          <button
+                            onClick={() => {
+                              setEditingSubject(subject);
+                              setIsEditFormOpen(true);
+                            }}
+                            className="text-green-600 hover:text-green-800 transition cursor-pointer p-2 mr-4 hover:bg-green-50 rounded-lg"
+                          >
+                            <Edit2 size={20} />
+                          </button>
+                          {/*Delete Icon */}
+                          <button
+                            onClick={() =>
+                              handleDeleteSubject(
+                                subject.id,
+                                subject.subject_name,
+                              )
+                            }
+                            className="text-red-600 hover:text-red-800 transition p-2 cursor-pointer hover:bg-red-50 rounded-lg"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </td>
+                      </tr>
+                    </>
                   ))}
+
+                  {isEditFormOpen && editingSubject && (
+                    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                      <form className="bg-white p-6 rounded-xl shadow-xl w-[400px]">
+                        <div className="flex justify-between items-center mb-4">
+                          <h1 className="text-xl font-bold">Edit Subject</h1>
+
+                          <button
+                            type="button"
+                            onClick={() => setIsEditFormOpen(false)}
+                            className="text-red-500 text-lg"
+                          >
+                            ✕
+                          </button>
+                        </div>
+
+                        <input
+                          type="text"
+                          value={editingSubject.subject_name}
+                          onChange={(e) =>
+                            setEditingSubject({
+                              ...editingSubject,
+                              subject_name: e.target.value,
+                            })
+                          }
+                          className="border w-full mb-3 rounded-lg px-4 py-2"
+                        />
+
+                        <input
+                          type="text"
+                          value={editingSubject.subject_code}
+                          onChange={(e) =>
+                            setEditingSubject({
+                              ...editingSubject,
+                              subject_code: e.target.value,
+                            })
+                          }
+                          className="border w-full rounded-lg px-4 py-2"
+                        />
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleEditSubject(
+                              editingSubject.id,
+                              editingSubject.subject_name,
+                              editingSubject.subject_code,
+                              editingSubject.class,
+                            )
+                          }
+                          className="w-full mt-5 bg-[#8E2C4A] text-white py-2 rounded-lg"
+                        >
+                          Update Subject
+                        </button>
+                      </form>
+                    </div>
+                  )}
                 </tbody>
               </table>
             </div>
           )}
         </div>
       )}
+      <ToastContainer/>
     </div>
   );
 };

@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import {toast, ToastContainer} from 'react-toastify'
 
 const AssignStudent = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const[className , setClassName] = useState("")
 
   const [isAsignFormOpen, setIsAsignFormOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
-
 
   const API = import.meta.env.VITE_API;
   const token = localStorage.getItem("token");
@@ -35,6 +36,40 @@ const AssignStudent = () => {
     fetchStudents();
   }, []);
 
+   const handleAssignStudent = async (class_name, studentId) => {
+  try {
+    if (!class_name) {
+      toast.error("Class is required");
+      return;
+    }
+      console.log("Sending:", {
+  student_id: selectedStudent.id,
+  class_name: className,
+});
+    const res = await axios.post(
+      `${API}/assign/student`,
+      {
+        student_id: studentId,
+        class_name: class_name,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (res.data.success) {
+      toast.success("Student Assigned Successfully!");
+      setIsAsignFormOpen(false);
+      setClassName("");
+      fetchStudents();
+    }
+  } catch (err) {
+    console.log(err?.response?.data || err);
+    toast.error(err?.response?.data?.message || "Error");
+  }
+};
   return (
     <div>
       <h1 className="text-xl font-bold mb-4">Assign Students</h1>
@@ -95,23 +130,25 @@ const AssignStudent = () => {
                     <label className="font-medium">Assign Class</label>
 
                     <input
+                    value={className}
+                    onChange={(e)=>setClassName(e.target.value)}
                       type="text"
                       placeholder="Enter class"
                       className="border rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-[#8E2C4A]"
                     />
                   </div>
 
-                  <button
-                    type="submit"
+                  <button onClick={()=>handleAssignStudent(className, selectedStudent.id)} type="button"
                     className="w-full mt-5 bg-[#8E2C4A] hover:bg-[#6E1A37] text-white py-2 rounded-lg"
                   >
-                    Save Assignment
+                    Asssign
                   </button>
                 </form>
               </div>
             )}
 </>
       )}
+      <ToastContainer/>
     </div>
   );
 };

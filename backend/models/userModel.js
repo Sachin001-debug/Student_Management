@@ -1,6 +1,7 @@
 import pool from "../config/db.js";
 
 //creating of the user table where all user basic details will be there
+//class name is the class student is in and assign class will be for student
 export const createUserTable = async () => {
   const query = `
   CREATE TABLE IF NOT EXISTS users (
@@ -8,8 +9,10 @@ export const createUserTable = async () => {
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password TEXT NOT NULL,
+
     role TEXT NOT NULL CHECK(role IN ('student', 'teacher', 'admin')) DEFAULT 'student',
     class_name VARCHAR(20),
+    assigned_class TEXT[]  ,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 `;
@@ -17,7 +20,7 @@ export const createUserTable = async () => {
     await pool.query(query);
     console.log("Users table ready");
   } catch (err) {
-    console.error("Error creating users table");
+    console.error("Error creating users table", err);
   }
 };
 
@@ -29,7 +32,13 @@ const insertUser = async (name, email, password, role, class_name) => {
     RETURNING id, name, email, role, class_name, created_at;
     `;
   try {
-    const result = await pool.query(query, [name, email, password, role, class_name]);
+    const result = await pool.query(query, [
+      name,
+      email,
+      password,
+      role,
+      class_name,
+    ]);
     return result.rows[0];
   } catch {
     console.log("user cant be created!!");
@@ -66,7 +75,7 @@ const getMe = async (id) => {
     console.log("Error getting user details", err);
   }
 };
-//change password 
+//change password
 const updatePassword = async (id, password) => {
   const query = `
     UPDATE users
