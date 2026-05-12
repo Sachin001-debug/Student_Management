@@ -1,4 +1,3 @@
-
 import pool from "../config/db.js";
 
 export const getSubjectsForStudent = async (studentId) => {
@@ -11,6 +10,7 @@ export const getSubjectsForStudent = async (studentId) => {
     const studentResult = await pool.query(studentQuery, [studentId]);
 
     if (studentResult.rows.length === 0) {
+      return [];
       console.log("Student not found");
     }
 
@@ -21,45 +21,60 @@ export const getSubjectsForStudent = async (studentId) => {
       SELECT s.*, u.name AS teacher_name
       FROM subjects s
       LEFT JOIN users u ON s.teacher_id = u.id
-      WHERE s.class = $1                  -- exact match '10'
-         OR s.class = $2                  -- exact match 'Class 10'
-         OR s.class ILIKE   $3    -- contains '10'
+      WHERE s.class = $1                  
+         OR s.class = $2                  
+         OR s.class ILIKE   $3    
       ORDER BY s.subject_name
     `;
 
     const result = await pool.query(subjectQuery, [
-      studentClass,          
-      `Class ${studentClass}`, 
-      studentClass          
+      studentClass,
+      `Class ${studentClass}`,
+       `%${studentClass}%`,
     ]);
     return result.rows;
-
   } catch (err) {
+    return []
     console.error(" Error in getSubjectsForStudent:", err.message);
   }
 };
 
-export const getSubjectForTeacher = async(teacherId)=>{
-  try{
-    const teacherQuery= `
-    SELECT assigned_class
-    FROM users WHERE id = $1
-    `
+export const getSubjectForTeacher = async (teacherId) => {
+  try {
+    // get teacher assigned classes
+    const teacherQuery = `
+      SELECT assigned_class
+      FROM users
+      WHERE id = $1 AND role = 'teacher'
+    `;
 
-    const teacherResult = await pool.query(teacherQuery,[teacherId]);
+    const teacherResult = await pool.query(teacherQuery, [teacherId]);
 
-     if(teacherResult.rows.length === 0){
-       console.log("Teacher not found");
-     }
+    if (teacherResult.rows.length === 0) {
+          return [];
+      console.log("Teacher not found");
+    }
 
-     const teacherClass = teacherResult.rows[0].assigned_class?.toString().trim()
+    const assignedClasses = teacherResult.rows[0].assigned_class || [];
+    if (!assignedClasses || assignedClasses.length === 0) {
+      return [];
+    }
 
-      if (!teacherClass) return [];
+    // fetch subjects for all assigned classes
+    const subjectQuery = `
+      SELECT  s.*,  u.name AS teacher_name
+      FROM subjects s
+      LEFT JOIN users u 
+        ON s.teacher_id = u.id
+      WHERE s.class = ANY($1)
+      ORDER BY s.class, s.subject_name
+    `;
 
-      const subjectQuery = `
-      
-      `
-  }catch(err){
-    console.log(err)
+    const result = await pool.query(subjectQuery, [assignedClasses]);
+
+    return result.rows;
+  } catch (err) {
+    console.log("Error in getSubjectForTeacher:", err);
+    return [];
   }
-}
+};
