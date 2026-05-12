@@ -41,7 +41,6 @@ export const getSubjectsForStudent = async (studentId) => {
 
 export const getSubjectForTeacher = async (teacherId) => {
   try {
-    // get teacher assigned classes
     const teacherQuery = `
       SELECT assigned_class
       FROM users
@@ -51,30 +50,36 @@ export const getSubjectForTeacher = async (teacherId) => {
     const teacherResult = await pool.query(teacherQuery, [teacherId]);
 
     if (teacherResult.rows.length === 0) {
-          return [];
       console.log("Teacher not found");
-    }
-
-    const assignedClasses = teacherResult.rows[0].assigned_class || [];
-    if (!assignedClasses || assignedClasses.length === 0) {
       return [];
     }
 
-    // fetch subjects for all assigned classes
+    let assignedClasses = teacherResult.rows[0].assigned_class || [];
+
+    if (!assignedClasses || assignedClasses.length === 0) { 
+      console.log("No classes assigned to teacher");
+      return [];
+    }
+
+    // Convert assigned classes to match subject format
+    const searchClasses = assignedClasses.map(cls => {
+      const c = cls.toString().trim();
+      return [`${c}`, `Class ${c}`, `class ${c}`];
+    }).flat();
+
     const subjectQuery = `
-      SELECT  s.*,  u.name AS teacher_name
+      SELECT s.*, u.name AS teacher_name
       FROM subjects s
-      LEFT JOIN users u 
-        ON s.teacher_id = u.id
+      LEFT JOIN users u ON s.teacher_id = u.id
       WHERE s.class = ANY($1)
       ORDER BY s.class, s.subject_name
     `;
 
-    const result = await pool.query(subjectQuery, [assignedClasses]);
-
+    const result = await pool.query(subjectQuery, [searchClasses]);
     return result.rows;
+
   } catch (err) {
-    console.log("Error in getSubjectForTeacher:", err);
+    console.error("Error in getSubjectForTeacher:", err.message);
     return [];
   }
 };

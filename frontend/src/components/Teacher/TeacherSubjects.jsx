@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 const TeachersSubjects = () => {
@@ -31,31 +31,44 @@ const TeachersSubjects = () => {
     fetchSubjects();
   }, []);
 
+  // Group subjects by class
+  const groupedSubjects = subjects.reduce((acc, subject)=>{
+    const className = subject.class || "other";
+    if(!acc[className]){
+      acc[className] =[];
+    }
+    acc[className].push(subject);
+    return acc
+  },{})
+
   if (loading) return <p>Loading subjects...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
   if (subjects.length === 0) return <p>No subjects found for your class.</p>;
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between w-full"> 
-        <h1 className="font-bold text-3xl text-[#8E2C4A]">Subjects For Your Class</h1>
-      </div>
-      {subjects.map((subject) => (
-        <>
-          <div
-            key={subject.id}
-            className="p-4 border rounded-lg shadow-sm hover:shadow-md transition"
-          >
-            <p className="font-semibold text-xl  text-[#8E2C4A]">{subject.subject_name}</p>
-            <p className="text-gray-600">{subject.subject_code}</p>
-            {subject.teacher_name && (
-              <p className="text-sm text-gray-500 mt-1">
-                Teacher: {subject.teacher_name}
-              </p>
-            )}
+    <div className="space-y-8">
+      {Object.keys(groupedSubjects)
+        .map((className) => (
+          <div key={className}>
+            <h2 className="text-2xl font-semibold text-[#8E2C4A] mb-4 border-b pb-2">
+               {className}
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {groupedSubjects[className].map((subject) => (
+                <div
+                  key={subject.id}
+                  className="p-5 border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 bg-white"
+                >
+                  <p className="font-semibold text-xl text-[#8E2C4A]">
+                    {subject.subject_name}
+                  </p>
+                  <p className="text-gray-600 mt-1">{subject.subject_code}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </>
-      ))}
+        ))}
     </div>
   );
 };

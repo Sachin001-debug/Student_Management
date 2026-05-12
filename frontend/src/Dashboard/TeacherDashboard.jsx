@@ -83,16 +83,6 @@ const TeacherDashboard = () => {
           </li>
 
           <li
-            onClick={() => navigateTo("assignments")}
-            className={`flex items-center gap-3 text-lg cursor-pointer py-3 px-4 rounded-lg transition-all ${
-              activePage === "assignments" ? "bg-gray-800 text-green-400" : "hover:text-green-400 hover:bg-gray-800"
-            }`}
-          >
-            <ClipboardList size={22} />
-            Assignments
-          </li>
-
-          <li
             onClick={() => navigateTo("exams")}
             className={`flex items-center gap-3 text-lg cursor-pointer py-3 px-4 rounded-lg transition-all ${
               activePage === "exams" ? "bg-gray-800 text-green-400" : "hover:text-green-400 hover:bg-gray-800"
@@ -189,8 +179,6 @@ const TeacherDashboard = () => {
           {activePage === "attendance" && <Attendance />}
 
           {/* Placeholder for other pages */}
-         
-          {activePage === "assignments" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Assignments</h2></div>}
           {activePage === "exams" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Exams &amp; Tests</h2></div>}
           {activePage === "students" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Students List</h2></div>}
           {activePage === "results" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Results &amp; Grading</h2></div>}

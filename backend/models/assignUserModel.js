@@ -1,7 +1,7 @@
 //contains assign model for student and teacher
 import pool from "../config/db.js";
 
-
+//for admin to assign
 export const assignStudentModel = async (student_id, class_name) => {
   try {
     const query = `
@@ -51,3 +51,4 @@ export const assignTeacherModel = async (teacher_id, class_name) => {
     throw err;
   }
 };
+

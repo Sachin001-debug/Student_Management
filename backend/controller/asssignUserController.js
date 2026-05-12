@@ -1,4 +1,7 @@
-import { assignStudentModel, assignTeacherModel } from "../models/assignUserModel.js";
+import {
+  assignStudentModel,
+  assignTeacherModel,
+} from "../models/assignUserModel.js";
 
 export const assignStudentClassController = async (req, res) => {
   try {
@@ -11,10 +14,7 @@ export const assignStudentClassController = async (req, res) => {
       });
     }
 
-    const student = await assignStudentModel(
-      student_id,
-      class_name
-    );
+    const student = await assignStudentModel(student_id, class_name);
 
     if (!student) {
       return res.status(404).json({
@@ -49,10 +49,7 @@ export const assignTeacherClassController = async (req, res) => {
       });
     }
 
-    const teacher = await assignTeacherModel(
-      teacher_id,
-      assigned_class
-    );
+    const teacher = await assignTeacherModel(teacher_id, assigned_class);
 
     if (!teacher) {
       return res.status(404).json({
@@ -74,3 +71,5 @@ export const assignTeacherClassController = async (req, res) => {
     });
   }
 };
+
+
