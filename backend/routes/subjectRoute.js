@@ -2,7 +2,7 @@ import express from 'express';
 
 
 import authMiddleware from "../middleware/authMiddleware.js";
-import { createSubject, deleteSubjectController, getSubjectsByClassController, getAllClassesController, editSubjectController, getSubjectsForTeacherController} from "../controller/subjectController.js";
+import { createSubject, deleteSubjectController, getSubjectsByClassController, getAllClassesController, editSubjectController} from "../controller/subjectController.js";
 import { adminOnly, teacherOnly } from "../middleware/roleMiddleware.js";
 
 const subjectRouter = express.Router();
@@ -18,6 +18,6 @@ subjectRouter.delete('/:id', authMiddleware, adminOnly, deleteSubjectController)
 //updates subject data from admin pannel (adminonly);
 subjectRouter.put('/edit-subject', authMiddleware, adminOnly, editSubjectController);
 
-subjectRouter.get('/teacher-subjects', authMiddleware, teacherOnly, getSubjectsForTeacherController)
+
 
 export default subjectRouter;

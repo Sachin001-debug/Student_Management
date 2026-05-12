@@ -131,20 +131,3 @@ export const editSubject = async (
     throw err;
   }
 };
-
-//for teacher since we have multiple classes for teacher
-export const getSubjectsByMultipleClasses = async (classes) => {
-  try {
-    const query = `
-      SELECT * FROM subjects
-      WHERE class = ANY($1)
-    `;
-
-    const result = await pool.query(query, [classes]);
-    return result.rows;
-
-  } catch (err) {
-    console.log("Error fetching subjects", err);
-    throw err;
-  }
-};

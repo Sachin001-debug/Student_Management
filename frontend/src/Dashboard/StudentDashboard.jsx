@@ -15,6 +15,7 @@ import StudentDashboardContent from '../components/Student/StudentDashboardConte
 import Profile from '../shared/Profile';   
 import { useNavigate } from 'react-router-dom';
 import ViewNotice from '../shared/ViewNotice';
+import StudentSubjects from '../components/Student/StudentSubjects';
 
 const StudentDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -68,15 +69,15 @@ const StudentDashboard = () => {
           </li>
 
           <li
-            onClick={() => navigateTo("courses")}
+            onClick={() => navigateTo("subjects")}
             className={`flex items-center gap-3 text-lg cursor-pointer py-3 px-4 rounded-lg transition-all ${
-              activePage === "courses"
+              activePage === "subjects"
                 ? "bg-gray-800 text-green-400"
                 : "hover:text-green-400 hover:bg-gray-800"
             }`}
           >
             <BookOpen size={22} />
-            Courses
+            Subjects
           </li>
 
           <li
@@ -160,13 +161,9 @@ const StudentDashboard = () => {
           {activePage === "dashboard" && <StudentDashboardContent />}
           {activePage === "profile" && <Profile />}
             {activePage === "notices" && <ViewNotice />}
-          
+          {activePage === "subjects" && <StudentSubjects />}   
         {/*after making components */}
-          {activePage === "courses" && (
-            <div className="text-center text-gray-500 mt-20">
-           
-            </div>
-          )}
+          
           {activePage === "assignments" && (
             <div className="text-center text-gray-500 mt-20">
             </div>

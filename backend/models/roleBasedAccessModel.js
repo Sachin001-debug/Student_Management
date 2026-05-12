@@ -36,7 +36,7 @@ export const getRoleBasedUsers = async (role, options = {}) => {
   }
 };
 
-// Get all teachers (for Admin to assign classes)
+// Get all teachers & student (for Admin to assign classes)
 export const getAllTeachers = async () => {
   const teachers = await getRoleBasedUsers("teacher");
 

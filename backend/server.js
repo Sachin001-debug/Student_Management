@@ -9,6 +9,7 @@ import roleRouter from './routes/roleBasedAccessRoute.js';
 import noticeRouter from './routes/noticeRoutes.js';
 import { createNoticeTable } from './models/noticeModel.js';
 import assignRouter from './routes/assignUserRoute.js';
+import assignedSubjectRouter from './routes/assignedClassSubjectRoute.js';
 
 dotenv.config(); 
 
@@ -35,8 +36,8 @@ app.use('/api/subject', subjectRouter)// create sub from admin dashboard, manage
 app.use('/api', roleRouter);
 app.use('/api', noticeRouter); //to get and post notices (admin:post)
 
-app.use('/api/assign', assignRouter)
-
+app.use('/api/assign', assignRouter)// assign classes to teacher and stdent
+app.use('/api/assigned/subjects', assignedSubjectRouter) // get subject for teaher and student
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

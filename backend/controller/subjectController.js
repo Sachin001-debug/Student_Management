@@ -1,5 +1,6 @@
 
-import {  getSubjectsByClass, getAllClasses,deleteSubject,insertSubject,editSubject, getSubjectsByMultipleClasses } from "../models/subjectModel.js";
+import {  getSubjectsByClass, getAllClasses,deleteSubject,insertSubject,editSubject } from "../models/subjectModel.js";
+import { getTeacherById } from "../models/userModel.js";
 
 // Get subjects by class
 const getSubjectsByClassController = async (req, res) => {
@@ -147,50 +148,11 @@ const editSubjectController = async (req, res) => {
   }
 };
 
-const getSubjectsForTeacherController = async (req, res) => {
-  try {
-    const teacherId = req.user.id;
-    
-    if(!teacherId){
-        return res.status(400).json({
-        success: false,
-        message: "Not authorized",
-      });
-    }
-    // get teacher classes
-    const teacher = await getTeacherById(teacherId);
 
-
-    const classes = teacher.assigned_class || [];
-
-    if (classes.length === 0) {
-      return res.json({
-        success: true,
-        subjects: [],
-      });
-    }
-
-    // get subjects for all classes
-    const subjects = await getSubjectsByMultipleClasses(classes);
-
-    res.json({
-      success: true,
-      subjects,
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch teacher subjects",
-    });
-  }
-};
 export {
   getSubjectsByClassController,
   getAllClassesController,
   createSubject,
   deleteSubjectController,
   editSubjectController,
-  getSubjectsForTeacherController
 };

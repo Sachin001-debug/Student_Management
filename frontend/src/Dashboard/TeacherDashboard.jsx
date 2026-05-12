@@ -19,6 +19,8 @@ import { useNavigate } from 'react-router-dom';
 import TeacherDashboardContent from '../components/Teacher/TeacherDashboardContent';
 import Profile from '../shared/Profile';
 import ViewNotice from '../shared/ViewNotice';
+import TeacherSubjects from '../components/Teacher/TeacherSubjects';
+import Attendance from '../components/Teacher/Attendance';
 
 const TeacherDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -71,9 +73,9 @@ const TeacherDashboard = () => {
           </li>
 
           <li
-            onClick={() => navigateTo("courses")}
+            onClick={() => navigateTo("subjects")}
             className={`flex items-center gap-3 text-lg cursor-pointer py-3 px-4 rounded-lg transition-all ${
-              activePage === "courses" ? "bg-gray-800 text-green-400" : "hover:text-green-400 hover:bg-gray-800"
+              activePage === "subjects" ? "bg-gray-800 text-green-400" : "hover:text-green-400 hover:bg-gray-800"
             }`}
           >
             <BookOpen size={22} />
@@ -182,13 +184,14 @@ const TeacherDashboard = () => {
         <div className="flex-1 overflow-auto p-6">
           {activePage === "dashboard" && <TeacherDashboardContent />}
           {activePage === "profile" && <Profile />}
-           {activePage === "notices" && <ViewNotice />}
+          {activePage === "notices" && <ViewNotice />}
+          {activePage === "subjects" && <TeacherSubjects />}
+          {activePage === "attendance" && <Attendance />}
 
           {/* Placeholder for other pages */}
-          {activePage === "courses" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Courses Management</h2></div>}
+         
           {activePage === "assignments" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Assignments</h2></div>}
           {activePage === "exams" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Exams &amp; Tests</h2></div>}
-          {activePage === "attendance" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Attendance Management</h2></div>}
           {activePage === "students" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Students List</h2></div>}
           {activePage === "results" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Results &amp; Grading</h2></div>}
         

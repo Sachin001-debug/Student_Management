@@ -85,4 +85,22 @@ const updatePassword = async (id, password) => {
 
   await pool.query(query, [password, id]);
 };
-export { getUserFromTable, insertUser, getMe, updatePassword };
+
+// models/userModel.js
+
+ const getTeacherById = async (teacherId) => {
+  try {
+    const query = `
+      SELECT id, name, email, role, assigned_class 
+      FROM users 
+      WHERE id = $1 AND role = 'teacher'
+    `;
+    
+    const result = await pool.query(query, [teacherId]);
+    return result.rows[0];
+  } catch (err) {
+    console.error("Error fetching teacher by ID:", err);
+    throw err;
+  }
+};
+export { getUserFromTable, insertUser, getMe, updatePassword,getTeacherById };

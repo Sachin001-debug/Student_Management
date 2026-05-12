@@ -43,11 +43,14 @@ const loginHandler = async () => {
       setEmail("");
       setPassword("");
       setIsFormOpen(false);
+         
+      //using role from local stiorage to get role and  redirecting to the respective routes
+      const userRole = localStorage.getItem("role");
 
       // Handle admin role
-      if (res.data.user.role === "admin") {
+      if (userRole === "admin") {
         navigate("/admin/dashboard");
-      } else if (res.data.user.role === "teacher") {
+      } else if (userRole === "teacher") {
         navigate("/teacher/dashboard");
       } else {
         navigate("/student/dashboard");
