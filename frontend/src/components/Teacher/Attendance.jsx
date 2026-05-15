@@ -1,26 +1,31 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 const Attendance = () => {
   const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const API = import.meta.env.VITE_API;
   const token = localStorage.getItem("token");
 
   const fetchStudents = async () => {
     try {
-      const res = await axios.get(`${API}/students`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      setLoading(true);
 
-      if (res.data.success) {
-        setStudents(res.data.students);
-        console.log("Fetched successfully!");
-      }
+      const res = await axios.get(
+        `${API}/teacher/students`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setStudents(res.data.students);
     } catch (err) {
-      console.log(err);
+      console.log("Error fetching students:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -29,23 +34,35 @@ const Attendance = () => {
   }, []);
 
   return (
-    <div className="space-y-3">
-      {students.map((student) => (
-        <div
-          key={student.id}
-          className="p-4 border rounded-lg shadow-sm"
-        >
-          <p className="font-semibold">{student.name}</p>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-6 text-[#8E2C4A]">
+        My Students
+      </h1>
 
-          <p className="text-sm text-gray-500">
-            {student.email}
-          </p>
-
-          <p className="text-sm text-blue-600">
-            Class: {student.class_name || "Not Assigned"}
-          </p>
+      {loading ? (
+        <p>Loading...</p>
+      ) : students.length === 0 ? (
+        <p>No students found for your assigned classes</p>
+      ) : (
+        <div className="grid gap-3">
+          {students.map((student) => (
+            <div
+              key={student.id}
+              className="border p-3 rounded shadow"
+            >
+              <h2 className="font-semibold">
+                {student.name}
+              </h2>
+              <p className="text-gray-600">
+                Email: {student.email}
+              </p>
+              <p className="text-[#8E2C4A] text-sm">
+                Class: {student.class_name}
+              </p>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 };

@@ -62,11 +62,24 @@ export const getAllStudents = async (search = "") => {
 
 //get students for teacher according to the assigned student class so that teacher can get studnets acc to class
 
-export const getStudentsForTeacher = async()=>{
-  try{
-    
+//get students for multiple classes 
+//eg:  assigned class is 8---> all class 8 students are displayed & assigned class are multiple
+export const getStudentsForMultipleAssignedClasses = async (assigned_class) => {
+  try {
+    const query = `
+      SELECT id, name, email, class_name
+      FROM users
+      WHERE role = 'student'
+      AND class_name = ANY($1)
+      ORDER BY name ASC
+    `;
 
-  }catch(err){
-   console.log(err);
+    const result = await pool.query(query, [ assigned_class || []]);
+
+    return result.rows;
+
+  } catch (err) {
+    console.log("Error fetching students by classes:", err);
+    throw err;
   }
-}
+};
