@@ -12,6 +12,8 @@ import assignRouter from './routes/assignUserRoute.js';
 import assignedSubjectRouter from './routes/assignedClassSubjectRoute.js';
 import { createExamTable } from './models/examModel.js';
 import examRouter from './routes/examRoute.js';
+import { createAttendanceTable } from './models/attendanceModel.js';
+import attendanceRouter from './routes/attendanceRoute.js';
 
 dotenv.config(); 
 
@@ -31,7 +33,7 @@ createUserTable();    //users table contains all users
 createSubjectTable()   //have sub list
 createNoticeTable(); //table for notices
 createExamTable(); //table for exam
-
+createAttendanceTable(); //table for attendance
 
 
 //api endpoints
@@ -45,7 +47,8 @@ app.use('/api', noticeRouter); //to get and post notices (admin:post)
 app.use('/api/assign', assignRouter)// assign classes to teacher and stdent
 app.use('/api/assigned/subjects', assignedSubjectRouter) // get subject for teaher and student
 
-app.use('/api', examRouter);
+app.use('/api', examRouter); //exam creation and fetch exam notice too
+app.use('/api/attendance', attendanceRouter); //atendance mark and get status
 
 
 app.listen(PORT, () => {
