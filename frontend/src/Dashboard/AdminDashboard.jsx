@@ -4,22 +4,24 @@ import {
   BookOpen,
   LogOut,
   Menu,
-  X,
   User,
   File,
   WindIcon,
-  School2,
   GraduationCap,
   Bell,
+  Paperclip,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import AdminDashboardContent from '../components/Admin/AdminDashboardContent'
 import CreateSubject from "../components/Admin/CreateSubject";
 import Profile from "../shared/Profile";
 import ManageSubjects from "../components/Admin/ManageSubjects";
 import AssignTeacher from "../components/Admin/AssignTeacher";
 import AssignStudent from "../components/Admin/AssignStudent";
 import Notice from "../components/Admin/Notice";
+import CreateExam from "../components/Admin/CreateExam";
+
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -63,9 +65,14 @@ const AdminDashboard = () => {
               { id: "subjects", label: "Create Subject", icon: BookOpen },
               { id: "manageSubjects", label: "Manage Subject", icon: File },
               { id: "assignClass", label: "Assign Teachers", icon: WindIcon },
-              { id: "assignStudent", label: "Assign Students", icon: GraduationCap },
+              {
+                id: "assignStudent",
+                label: "Assign Students",
+                icon: GraduationCap,
+              },
+                { id: "exam", label: "Exam", icon: Paperclip },
               { id: "profile", label: "Profile", icon: User },
-              { id: "notice", label: "Notice", icon: Bell},
+              { id: "notice", label: "Notice", icon: Bell },
             ].map(({ id, label, icon: Icon }) => (
               <li
                 key={id}
@@ -118,21 +125,12 @@ const AdminDashboard = () => {
 
         {/* Page Content */}
         <main className="flex-1 overflow-auto p-6 md:p-8 bg-gray-50">
-          {activePage === "dashboard" && (
-            <div className="text-center py-20">
-              <h2 className="text-3xl font-bold text-gray-700">
-                Welcome to Admin Dashboard
-              </h2>
-              <p className="text-gray-500 mt-3">
-                Select an option from the sidebar to get started
-              </p>
-            </div>
-          )}
-
+          {activePage === "dashboard" && <AdminDashboardContent />}
           {activePage === "subjects" && <CreateSubject />}
-          {activePage === "manageSubjects" && <ManageSubjects/>}
+          {activePage === "manageSubjects" && <ManageSubjects />}
           {activePage === "assignClass" && <AssignTeacher />}
           {activePage === "assignStudent" && <AssignStudent />}
+          {activePage === "exam" && <CreateExam />}
           {activePage === "profile" && <Profile />}
           {activePage === "notice" && <Notice />}
         </main>

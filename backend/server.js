@@ -10,6 +10,8 @@ import noticeRouter from './routes/noticeRoutes.js';
 import { createNoticeTable } from './models/noticeModel.js';
 import assignRouter from './routes/assignUserRoute.js';
 import assignedSubjectRouter from './routes/assignedClassSubjectRoute.js';
+import { createExamTable } from './models/examModel.js';
+import examRouter from './routes/examRoute.js';
 
 dotenv.config(); 
 
@@ -26,6 +28,8 @@ app.use(express.json());
 createUserTable();    //users table contains all users
 createSubjectTable()   //have sub list
 createNoticeTable(); //table for notices
+createExamTable(); //table for exam
+
 
 
 //api endpoints
@@ -33,11 +37,13 @@ app.use('/api/user', userRouter); //login, rregister, change pass
 app.use('/api/subject', subjectRouter)// create sub from admin dashboard, manage get and edit sub
 
  //we are using this route to get details of student or teacher and students to admina and st for teachers
-app.use('/api', roleRouter);
+app.use('/api', roleRouter); //get student and yeacher
 app.use('/api', noticeRouter); //to get and post notices (admin:post)
 
 app.use('/api/assign', assignRouter)// assign classes to teacher and stdent
 app.use('/api/assigned/subjects', assignedSubjectRouter) // get subject for teaher and student
+
+app.use('/api', examRouter)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

@@ -75,7 +75,16 @@ const createSubject = async (req, res) => {
       subject: newSubject
     });
   } catch (err) {
-    console.error("Error in createSubject:", err);
+    //to check if the code alredy exists  so that admin can get the error 
+    // right away and know the subject already exists 
+    //here err.message comes from the insert model which throws "Subject code already exists"
+    //front gets the mesage displays in the toast
+      if (err.message === "Subject code already exists") {
+      return res.status(400).json({
+        success: false,
+        message: "Subject code already exists. Please check manage subject and add subject!",
+      });
+    }
     res.status(500).json({
       success: false,
       message: "Failed to create subject"

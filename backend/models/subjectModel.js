@@ -1,4 +1,4 @@
-import pool from '../config/db.js'
+import pool from "../config/db.js";
 
 //this creates sub table with class so that we can fetch/get sub class wise
 export const createSubjectTable = async () => {
@@ -21,13 +21,13 @@ export const createSubjectTable = async () => {
   }
 };
 
-// Updated insertSubject with class parameter 
+// Updated insertSubject with class parameter
 //camel case from the frontend
 export const insertSubject = async (
   subjectName,
   subjectCode,
-  class_name, 
-  teacherId
+  class_name,
+  teacherId,
 ) => {
   try {
     const query = `
@@ -46,6 +46,9 @@ export const insertSubject = async (
 
     return result.rows[0];
   } catch (err) {
+    if (err.code === "23505") {
+      throw new Error("Subject code already exists");
+    }
     console.log("Error inserting subject", err);
     throw err;
   }
@@ -61,7 +64,7 @@ export const getSubjectsByClass = async (className) => {
       WHERE s.class = $1
       ORDER BY s.subject_name
     `;
-    
+
     const result = await pool.query(query, [className]);
     return result.rows;
   } catch (err) {
@@ -78,9 +81,9 @@ export const getAllClasses = async () => {
       FROM subjects 
       ORDER BY class
     `;
-    
+
     const result = await pool.query(query);
-    return result.rows.map(row => row.class);
+    return result.rows.map((row) => row.class);
   } catch (err) {
     console.log("Error fetching classes", err);
     throw err;
@@ -100,12 +103,12 @@ export const deleteSubject = async (subjectId) => {
 };
 
 //edit subject from manage subject
-//only for admin. so admin can edit subject name, code 
+//only for admin. so admin can edit subject name, code
 export const editSubject = async (
   subjectId,
   subjectName,
   subjectCode,
-  class_name
+  class_name,
 ) => {
   try {
     const query = `

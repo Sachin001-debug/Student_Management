@@ -23,7 +23,6 @@ const Navbar = () => {
   const [currentState, setCurrentState] = useState("Login");
 
   // LOGIN HANDLER
-  // Navbar.jsx - Update the loginHandler
 const loginHandler = async () => {
   try {
     if (!email || !password) {
@@ -43,9 +42,8 @@ const loginHandler = async () => {
       setEmail("");
       setPassword("");
       setIsFormOpen(false);
-         
-      //using role from local stiorage to get role and  redirecting to the respective routes
-      const userRole = localStorage.getItem("role");
+
+      const userRole = res.data.user.role;
 
       // Handle admin role
       if (userRole === "admin") {

@@ -87,24 +87,14 @@ const CreateSubject = () => {
           required
         />
 
-        <select
+        <input
           value={className}
           onChange={(e) => setClassName(e.target.value)}
           className="border p-3 rounded focus:outline-none focus:ring-2 focus:ring-[#8E2C4A]"
-          required
+          required placeholder="Enter Class Name(9, 10, Bsc, Msc)...."
         >
-          <option value="">Select Class</option>
-          <option value="Class 1">Class 1</option>
-          <option value="Class 2">Class 2</option>
-          <option value="Class 3">Class 3</option>
-          <option value="Class 4">Class 4</option>
-          <option value="Class 5">Class 5</option>
-          <option value="Class 6">Class 6</option>
-          <option value="Class 7">Class 7</option>
-          <option value="Class 8">Class 8</option>
-          <option value="Class 9">Class 9</option>
-          <option value="Class 10">Class 10</option>
-        </select>
+       
+        </input>
 
         <button
           type="submit"
@@ -114,8 +104,13 @@ const CreateSubject = () => {
           {loading ? "Creating..." : "Create Subject"}
         </button>
       </form>
-      
-      <ToastContainer position="top-right" autoClose={3000} />
+       
+       <h1 className=" text-2xl font-bold mt-15">Note</h1>
+       <div className="text-sm text-gray-700 mt-2" >
+      <h1>Admin can add Subjct to any subject and class. <span className="font-semibold text-[#8E2C4A]">Be responsible while adding subjects in classes.</span> </h1> 
+      <h2>You can always delete or edit from <span className="text-[#8E2C4A]">Manage Subjects</span>.</h2>
+       </div>
+      <ToastContainer/>
     </div>
   );
 };
