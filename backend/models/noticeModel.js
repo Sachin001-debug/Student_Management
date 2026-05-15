@@ -75,3 +75,4 @@ export const deleteNotice = async (notice_id) => {
     throw err;
   }
 };
+

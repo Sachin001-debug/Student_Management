@@ -58,3 +58,15 @@ export const getAllStudents = async (search = "") => {
     class_name: s.class_name || null
   }));
 };
+
+
+//get students for teacher according to the assigned student class so that teacher can get studnets acc to class
+
+export const getStudentsForTeacher = async()=>{
+  try{
+    
+
+  }catch(err){
+   console.log(err);
+  }
+}

@@ -23,6 +23,8 @@ app.use(cors())
 
 
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
+
 
 //Tables endpoints
 createUserTable();    //users table contains all users
@@ -43,7 +45,8 @@ app.use('/api', noticeRouter); //to get and post notices (admin:post)
 app.use('/api/assign', assignRouter)// assign classes to teacher and stdent
 app.use('/api/assigned/subjects', assignedSubjectRouter) // get subject for teaher and student
 
-app.use('/api', examRouter)
+app.use('/api', examRouter);
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

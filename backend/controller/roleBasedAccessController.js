@@ -40,3 +40,8 @@ export const getStudentsController = async (req, res) => {
     });
   }
 };
+
+
+export const getStudentsForTeacher = async()=>{
+  
+}

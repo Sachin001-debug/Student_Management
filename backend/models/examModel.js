@@ -18,15 +18,15 @@ export const createExamTable = async () => {
 };
 
 // create exam
-export const createExamModel = async (class_name) => {
+export const createExamModel = async (class_name, notice_file) => {
   try {
     const query = `
-      INSERT INTO exams (class_name)
-      VALUES ($1)
+      INSERT INTO exams (class_name, notice_file)
+      VALUES ($1, $2)
       RETURNING *;
     `;
 
-    const result = await pool.query(query, [class_name]);
+    const result = await pool.query(query, [class_name, notice_file]);
 
     return result.rows[0];
   } catch (err) {
@@ -52,7 +52,7 @@ export const getExamClassModel = async (id) => {
   }
 };
 
-//this will list the sub fromsubject table where according subja all classes are fetched can admin
+//this will list the sub fromsubject table where according subj all classes are fetched can admin
 //  can give to  particular subject a exam data
 
 export const getExamSubjectForClasses = async (className) => {
@@ -74,6 +74,51 @@ export const getExamSubjectForClasses = async (className) => {
     return result.rows;
   } catch (err) {
     console.log("error getting sub", err);
+    throw err;
+  }
+};
+
+
+//get exam notice for teachers and studenyts
+
+export const getExamNoticesByRole = async (
+  role,
+  class_name,
+  assigned_class
+) => {
+  try {
+    let query = "";
+    let values = [];
+
+    // STUDENT
+    if (role === "student") {
+      query = `
+        SELECT *
+        FROM exams
+        WHERE class_name = $1
+        ORDER BY created_at DESC
+      `;
+
+      values = [class_name];
+    }
+
+    // TEACHER
+    else if (role === "teacher") {
+      query = `
+        SELECT *
+        FROM exams
+        WHERE class_name = ANY($1)
+        ORDER BY created_at DESC
+      `;
+
+      values = [assigned_class];
+    }
+
+    const result = await pool.query(query, values);
+
+    return result.rows;
+  } catch (err) {
+    console.log("Error getting notices", err);
     throw err;
   }
 };

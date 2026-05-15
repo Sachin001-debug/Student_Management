@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   LayoutDashboard,
   BookOpen,
-  ClipboardList,
   BarChart3,
   User,
   LogOut,
@@ -21,6 +20,8 @@ import Profile from '../shared/Profile';
 import ViewNotice from '../shared/ViewNotice';
 import TeacherSubjects from '../components/Teacher/TeacherSubjects';
 import Attendance from '../components/Teacher/Attendance';
+import TeacherExam from '../components/Teacher/TeacherExam';
+import TeachersStudent from '../components/Teacher/TeachersStudent';
 
 const TeacherDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -177,10 +178,12 @@ const TeacherDashboard = () => {
           {activePage === "notices" && <ViewNotice />}
           {activePage === "subjects" && <TeacherSubjects />}
           {activePage === "attendance" && <Attendance />}
+           {activePage === "exams" && <TeacherExam />}
+           {activePage === "students" && <TeachersStudent />}
 
           {/* Placeholder for other pages */}
-          {activePage === "exams" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Exams &amp; Tests</h2></div>}
-          {activePage === "students" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Students List</h2></div>}
+          
+          
           {activePage === "results" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Results &amp; Grading</h2></div>}
         
         </div>

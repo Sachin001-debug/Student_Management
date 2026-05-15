@@ -1,9 +1,12 @@
-import { createExamModel, getExamClassModel, getExamSubjectForClasses } from "../models/examModel.js";
+import { createExamModel, getExamClassModel, getExamSubjectForClasses, getExamNoticesByRole } from "../models/examModel.js";
 import pool from "../config/db.js";
 
 export const createExamController = async (req, res) => {
   try {
     const { class_name } = req.body;
+
+    //if notice file doesnt exists it stays null
+    const notice_file = req.file ? `uploads/${req.file.filename}` : null;
 
     if (!class_name) {
       return res.status(400).json({
@@ -11,7 +14,7 @@ export const createExamController = async (req, res) => {
         message: "Class name is required",
       });
     }
-    const exam = await createExamModel(class_name);
+    const exam = await createExamModel(class_name, notice_file);
 
     res.status(201).json({
       success: true,
@@ -75,4 +78,52 @@ export const getExamSubjectsController = async (req, res) => {
   }
 };
 
-//creating table so that each sub in each class wil, have date of exam 
+//get exam notice 
+export const getExamNoticesController = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // ALWAYS get fresh user data from DB
+    const userResult = await pool.query(
+      `SELECT role, class_name, assigned_class
+       FROM users
+       WHERE id = $1`,
+      [userId]
+    );
+
+    const user = userResult.rows[0];
+
+    let notices;
+
+    if (user.role === "student") {
+      notices = await pool.query(
+        `SELECT * FROM exams WHERE class_name = $1`,
+        [user.class_name]
+      );
+    }
+
+    else if (user.role === "teacher") {
+      notices = await pool.query(
+        `SELECT * FROM exams WHERE class_name = ANY($1)`,
+        [user.assigned_class || []]
+      );
+    }
+
+    else {
+      notices = await pool.query(`SELECT * FROM exams`);
+    }
+
+    return res.status(200).json({
+      success: true,
+      notices: notices.rows,
+    });
+
+  } catch (err) {
+    console.log(err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch notices",
+    });
+  }
+};

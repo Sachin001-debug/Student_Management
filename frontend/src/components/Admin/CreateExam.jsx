@@ -6,7 +6,9 @@ const CreateExam = () => {
   const [className, setClassName] = useState("");
   const [examClasses, setExamClasses] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  const [noticeForm, setNoticeForm] = useState("")
+  const [noticeFile, setNoticeFile] = useState(null);
+
+  const [preiview, setPreview] = useState(false);
 
   const token = localStorage.getItem("token");
   const API = import.meta.env.VITE_API;
@@ -37,24 +39,27 @@ const CreateExam = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        `${API}/create-exam`,
-        {
-          class_name: className,
+      const formData = new FormData();
+
+      formData.append("class_name", className);
+      formData.append("notice_file", noticeFile);
+
+      const res = await axios.post(`${API}/create-exam`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      });
 
-      toast.success(res.data.message);
+      if (res.data.success) {
+        toast.success(res.data.message);
 
-      fetchExamClasses();
+        fetchExamClasses();
 
-      // clear input
-      setClassName("");
+        setClassName("");
+        setNoticeFile(null);
+        setPreview(false);
+      }
     } catch (err) {
       console.log(err);
 
@@ -65,14 +70,11 @@ const CreateExam = () => {
   // fetch subjects according to class
   const fetchExamSubjects = async (className) => {
     try {
-      const res = await axios.get(
-        `${API}/subjects/${className}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${API}/subjects/${className}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setSubjects(res.data.subjects);
     } catch (err) {
@@ -99,9 +101,16 @@ const CreateExam = () => {
           placeholder="Enter Class Name (9, 10, Bsc, Msc)..."
         />
 
-        <input type="file" onChange={(e)=> setNoticeForm(e.target.value)}
-         className="border w-[90px] h-[30px]"
-          required/>
+        <input
+          type="file"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            setNoticeFile(file);
+          }}
+          className="border p-2 rounded cursor-pointer"
+          accept=".pdf,.jpg,.jpeg,.png" // ← Recommended
+          required
+        />
 
         <button
           type="submit"
@@ -121,9 +130,7 @@ const CreateExam = () => {
 
       {/* EXAM CLASSES */}
       <div className="mt-10">
-        <h1 className="text-xl font-semibold mb-4">
-          Exam Classes
-        </h1>
+        <h1 className="text-xl font-semibold mb-4">Exam Classes</h1>
 
         <div className="flex flex-wrap gap-3">
           {examClasses.map((exam) => (
@@ -140,9 +147,7 @@ const CreateExam = () => {
 
       {/* SUBJECTS */}
       <div className="mt-10">
-        <h1 className="text-xl font-semibold mb-4">
-          Subjects
-        </h1>
+        <h1 className="text-xl font-semibold mb-4">Subjects</h1>
 
         <div className="flex flex-wrap gap-3">
           {subjects.map((sub) => (
