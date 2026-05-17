@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {ToastContainer, toast} from 'react-toastify'
 
 const Attendance = () => {
   const [students, setStudents] = useState([]);
@@ -29,8 +30,32 @@ const Attendance = () => {
     }
   };
 
+  const fetchAttendance = async () => {
+  try {
+    const res = await axios.get(
+      `${API}/attendance/today`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const mapped = {};
+
+    res.data.attendance.forEach((item) => {
+      mapped[item.student_id] = item.status;
+    });
+
+    setAttendance(mapped);
+  } catch (err) {
+    console.log("Error loading attendance:", err);
+  }
+};
+
   useEffect(() => {
     fetchStudents();
+    fetchAttendance();
   }, []);
 
   // MARK ATTENDANCE
@@ -53,8 +78,7 @@ const Attendance = () => {
         })
       );
 
-      await axios.post(
-        `${API}/attendance/mark`,
+      await axios.post( `${API}/attendance/mark`,
         {
           records,
           date: new Date().toISOString().split("T")[0],
@@ -66,11 +90,12 @@ const Attendance = () => {
         }
       );
 
-      alert("Attendance saved successfully!");
+      toast.success("Attendance saved successfully!");
 
       setAttendance({});
     } catch (err) {
       console.log("Error saving attendance:", err);
+      toast.error("Error Saving Attendance!")
     } finally {
       setSaving(false);
     }
@@ -148,6 +173,7 @@ const Attendance = () => {
           </button>
         </>
       )}
+      <ToastContainer/>
     </div>
   );
 };

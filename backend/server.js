@@ -14,6 +14,8 @@ import { createExamTable } from './models/examModel.js';
 import examRouter from './routes/examRoute.js';
 import { createAttendanceTable } from './models/attendanceModel.js';
 import attendanceRouter from './routes/attendanceRoute.js';
+import { createMarksTable } from './models/marksModel.js';
+import marksRouter from './routes/marksRoute.js';
 
 dotenv.config(); 
 
@@ -34,6 +36,7 @@ createSubjectTable()   //have sub list
 createNoticeTable(); //table for notices
 createExamTable(); //table for exam
 createAttendanceTable(); //table for attendance
+createMarksTable(); //table store marks of students acc to subjs
 
 
 //api endpoints
@@ -50,6 +53,7 @@ app.use('/api/assigned/subjects', assignedSubjectRouter) // get subject for teah
 app.use('/api', examRouter); //exam creation and fetch exam notice too
 app.use('/api/attendance', attendanceRouter); //atendance mark and get status
 
+app.use('/api/marks', marksRouter) //to get insert, fun for marks 
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

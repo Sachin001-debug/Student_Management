@@ -16,6 +16,7 @@ import Profile from '../shared/Profile';
 import { useNavigate } from 'react-router-dom';
 import ViewNotice from '../shared/ViewNotice';
 import StudentSubjects from '../components/Student/StudentSubjects';
+import StudentsResult from '../components/Student/StudentsResult';
 
 const StudentDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -162,16 +163,14 @@ const StudentDashboard = () => {
           {activePage === "profile" && <Profile />}
             {activePage === "notices" && <ViewNotice />}
           {activePage === "subjects" && <StudentSubjects />}   
+            {activePage === "results" && <StudentsResult />}   
         {/*after making components */}
           
           {activePage === "assignments" && (
             <div className="text-center text-gray-500 mt-20">
             </div>
           )}
-          {activePage === "results" && (
-            <div className="text-center text-gray-500 mt-20">
-            </div>
-          )}
+         
         </div>
       </div>
 

@@ -22,6 +22,7 @@ import TeacherSubjects from '../components/Teacher/TeacherSubjects';
 import Attendance from '../components/Teacher/Attendance';
 import TeacherExam from '../components/Teacher/TeacherExam';
 import TeachersStudent from '../components/Teacher/TeachersStudent';
+import Marks from '../components/Teacher/Marks';
 
 const TeacherDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -114,13 +115,13 @@ const TeacherDashboard = () => {
           </li>
 
           <li
-            onClick={() => navigateTo("results")}
+            onClick={() => navigateTo("marks")}
             className={`flex items-center gap-3 text-lg cursor-pointer py-3 px-4 rounded-lg transition-all ${
               activePage === "results" ? "bg-gray-800 text-green-400" : "hover:text-green-400 hover:bg-gray-800"
             }`}
           >
             <Database size={22}/>
-             Results
+            Marks/Results
           </li>
 
           <li
@@ -180,12 +181,11 @@ const TeacherDashboard = () => {
           {activePage === "attendance" && <Attendance />}
            {activePage === "exams" && <TeacherExam />}
            {activePage === "students" && <TeachersStudent />}
-
+            {activePage === "marks" && <Marks />}
           {/* Placeholder for other pages */}
           
           
-          {activePage === "results" && <div className="text-center mt-20"><h2 className="text-3xl text-gray-500">Results &amp; Grading</h2></div>}
-        
+     
         </div>
       </div>
 
