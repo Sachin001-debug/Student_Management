@@ -2,21 +2,19 @@ import pool from "../config/db.js";
 
 export const markAttendanceController = async (req, res) => {
   try {
-    
     const { records, date } = req.body;
     // records = [{student_id, status}]
-
     const className = req.user.class_name || null;
 
     for (let r of records) {
       await pool.query(
         `
-    INSERT INTO attendance (student_id, class_name, date, status)
-    VALUES ($1, $2, $3, $4)
-    ON CONFLICT (student_id, class_name, date)
-    DO UPDATE SET status = EXCLUDED.status
-    `,
-        [r.student_id, className, date, r.status],
+        INSERT INTO attendance (student_id, class_name, date, status)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (student_id, class_name, date)
+        DO NOTHING
+        `,
+        [r.student_id, className, date, r.status]
       );
     }
 

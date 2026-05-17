@@ -22,3 +22,4 @@ export const createAttendanceTable = async()=>{
     console.log("error creating attendance table!!", err)
   }
 }
+

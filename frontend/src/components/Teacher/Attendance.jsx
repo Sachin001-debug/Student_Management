@@ -30,32 +30,9 @@ const Attendance = () => {
     }
   };
 
-  const fetchAttendance = async () => {
-  try {
-    const res = await axios.get(
-      `${API}/attendance/today`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const mapped = {};
-
-    res.data.attendance.forEach((item) => {
-      mapped[item.student_id] = item.status;
-    });
-
-    setAttendance(mapped);
-  } catch (err) {
-    console.log("Error loading attendance:", err);
-  }
-};
 
   useEffect(() => {
     fetchStudents();
-    fetchAttendance();
   }, []);
 
   // MARK ATTENDANCE

@@ -8,10 +8,6 @@ const attendanceRouter =  express.Router();
 
 attendanceRouter.post('/mark', authMiddleware, markAttendanceController);
 
-attendanceRouter.get(
-  "/today",
-  authMiddleware,
-  getTodayAttendanceController
-);
+attendanceRouter.get("/today", authMiddleware, getTodayAttendanceController);
 
 export default attendanceRouter;
